@@ -1,0 +1,8 @@
+resources:
+  - namespace.yaml
+  - backend-deployment.yaml
+  - backend-service.yaml
+  - frontend-rollout.yaml
+  - frontend-active-service.yaml
+  - frontend-preview-service.yaml
+  - ingress.yaml

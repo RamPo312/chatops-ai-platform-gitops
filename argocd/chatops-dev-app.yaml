@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chatops-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/RamPo312/chatops-ai-platform-gitops.git
+    targetRevision: main
+    path: apps/chatops/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: chatops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
