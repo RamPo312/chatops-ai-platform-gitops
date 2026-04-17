@@ -3,28 +3,49 @@ kind: Application
 metadata:
   name: monitoring-dev
   namespace: argocd
+
 spec:
   project: default
+
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
     targetRevision: 83.4.3
     helm:
-      valueFiles:
-        - $values/apps/monitoring/base/values.yaml
-  sources:
-    - repoURL: https://prometheus-community.github.io/helm-charts
-      chart: kube-prometheus-stack
-      targetRevision: 83.4.3
-      helm:
-        valueFiles:
-          - $values/apps/monitoring/base/values.yaml
-    - repoURL: https://github.com/RamPo312/chatops-ai-platform-gitops.git
-      targetRevision: main
-      ref: values
+      values: |
+        grafana:
+          adminPassword: "admin123"
+          service:
+            type: ClusterIP
+          persistence:
+            enabled: false
+
+        alertmanager:
+          enabled: true
+          alertmanagerSpec:
+            replicas: 1
+
+        prometheus:
+          prometheusSpec:
+            replicas: 1
+            retention: 7d
+            serviceMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelectorNilUsesHelmValues: false
+            storageSpec: {}
+
+        kubeStateMetrics:
+          enabled: true
+
+        nodeExporter:
+          enabled: true
+
+        prometheusOperator:
+          enabled: true
+
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+
   syncPolicy:
     automated:
       prune: true
