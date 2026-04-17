@@ -1,0 +1,2 @@
+resources:
+  - prometheusrules.yaml
